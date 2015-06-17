@@ -34,15 +34,15 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     
     // Let's setup all attributes and assign text delegates here
     func setup() {
-        self.shareButton.enabled = false
+        shareButton.enabled = false
         
-        self.topText.delegate = self
-        self.topText.defaultTextAttributes = memeTextAttributes
-        self.topText.textAlignment = NSTextAlignment.Center
+        topText.delegate = self
+        topText.defaultTextAttributes = memeTextAttributes
+        topText.textAlignment = NSTextAlignment.Center
         
-        self.bottomText.delegate = self
-        self.bottomText.defaultTextAttributes = memeTextAttributes
-        self.bottomText.textAlignment = NSTextAlignment.Center
+        bottomText.delegate = self
+        bottomText.defaultTextAttributes = memeTextAttributes
+        bottomText.textAlignment = NSTextAlignment.Center
     }
     
     override func viewDidLoad() {
@@ -89,12 +89,12 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
     }
     
     override func viewWillAppear(animated: Bool) {
-        self.cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
-        self.subscribeToKeyboardNotifications()
+        cameraButton.enabled = UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera)
+        subscribeToKeyboardNotifications()
     }
     
     override func viewWillDisappear(animated: Bool) {
-        self.unsubscribeFromKeyboardNotifications()
+        unsubscribeFromKeyboardNotifications()
     }
     
     // Following functions handle image selection
@@ -112,16 +112,16 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         self.presentViewController(pickerController, animated: true, completion: nil)
     }
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage!, editingInfo: [NSObject : AnyObject]!) {
-        self.shareButton.enabled = true
-        self.imageToEdit.image = image
+        shareButton.enabled = true
+        imageToEdit.image = image
         self.dismissViewControllerAnimated(true, completion: nil)
     }
     
     // Create memed Image
     func generateMemedImage() -> UIImage
     {
-        self.editToolBar.hidden = true
-        self.editNavBar.hidden = true
+        editToolBar.hidden = true
+        editNavBar.hidden = true
         
         // Render view to an image
         UIGraphicsBeginImageContext(self.view.frame.size)
@@ -131,8 +131,8 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
-        self.editToolBar.hidden = false
-        self.editNavBar.hidden = false
+        editToolBar.hidden = false
+        editNavBar.hidden = false
         
         return memedImage
     }
@@ -150,10 +150,13 @@ class MemeEditorViewController: UIViewController, UITextFieldDelegate, UIImagePi
         
         avc.completionWithItemsHandler = {
             (activity, success, items, error) in
-            self.save()
-            avc.dismissViewControllerAnimated(true, completion: nil)
-            let nextController = self.storyboard?.instantiateViewControllerWithIdentifier("TabController") as! UITabBarController
-            self.presentViewController(nextController, animated: true, completion: nil)
+            
+            if (success == true) {
+                self.save()
+                avc.dismissViewControllerAnimated(true, completion: nil)
+                let nextController = self.storyboard?.instantiateViewControllerWithIdentifier("TabController") as! UITabBarController
+                self.presentViewController(nextController, animated: true, completion: nil)
+            }
         }
         self.presentViewController(avc, animated: true, completion: nil)
     }
